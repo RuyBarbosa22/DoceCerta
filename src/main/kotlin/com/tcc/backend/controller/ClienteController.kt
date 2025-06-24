@@ -1,9 +1,8 @@
 package com.tcc.backend.controller
 
 import com.tcc.backend.dto.AtualizarContatoDTO
-import com.tcc.backend.dto.ClienteResponseDTO
-import com.tcc.backend.dto.CriarClienteRequestDTO
-import com.tcc.backend.dto.EnderecoDTO
+import com.tcc.backend.dto.clienteDTO.CriarClienteRequestDTO
+import com.tcc.backend.dto.enderecoDTO.EnderecoDTO
 import com.tcc.backend.mappers.toEntity
 import com.tcc.backend.mappers.toResponseDTO
 import com.tcc.backend.models.Cliente

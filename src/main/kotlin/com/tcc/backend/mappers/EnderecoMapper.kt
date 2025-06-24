@@ -1,6 +1,6 @@
 package com.tcc.backend.mappers
 
-import com.tcc.backend.dto.EnderecoDTO
+import com.tcc.backend.dto.enderecoDTO.EnderecoDTO
 import com.tcc.backend.models.Endereco
 
 fun Endereco.toDTO(): EnderecoDTO {

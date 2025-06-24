@@ -1,6 +1,6 @@
 package com.tcc.backend.mappers
 
-import com.tcc.backend.dto.VendaResponseDTO
+import com.tcc.backend.dto.vendaDTO.VendaResponseDTO
 import com.tcc.backend.models.Venda
 
 fun Venda.toResponseDTO(): VendaResponseDTO {

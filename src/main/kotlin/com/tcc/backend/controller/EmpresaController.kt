@@ -1,7 +1,7 @@
 package com.tcc.backend.controller
 
-import com.tcc.backend.dto.EmpresaDTO
-import com.tcc.backend.dto.EmpresaResponseDTO
+import com.tcc.backend.dto.empresaDTO.EmpresaDTO
+import com.tcc.backend.dto.empresaDTO.EmpresaResponseDTO
 import com.tcc.backend.mappers.toEntity
 import com.tcc.backend.mappers.toResponseDTO
 import com.tcc.backend.models.Empresa

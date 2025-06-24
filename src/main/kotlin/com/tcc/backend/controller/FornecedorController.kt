@@ -1,7 +1,7 @@
 package com.tcc.backend.controller
 
-import com.tcc.backend.dto.FornecedorCreateDTO
-import com.tcc.backend.dto.FornecedorUpdateDTO
+import com.tcc.backend.dto.fornecedorDTO.FornecedorCreateDTO
+import com.tcc.backend.dto.fornecedorDTO.FornecedorUpdateDTO
 import com.tcc.backend.mappers.toEntity
 import com.tcc.backend.mappers.toResponseDTO
 import com.tcc.backend.models.Fornecedor

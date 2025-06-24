@@ -1,8 +1,8 @@
 package com.tcc.backend.mappers
 
-import com.tcc.backend.dto.ProdutoResponseDTO
-import com.tcc.backend.dto.ProdutoSimplesResponseDTO
-import com.tcc.backend.dto.toSimplesResponseDTO
+import com.tcc.backend.dto.produtoDTO.ProdutoResponseDTO
+import com.tcc.backend.dto.produtoDTO.ProdutoSimplesResponseDTO
+import com.tcc.backend.dto.produtoDTO.toSimplesResponseDTO
 import com.tcc.backend.models.Produto
 
 fun Produto.toResponseDTO(): ProdutoResponseDTO {

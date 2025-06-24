@@ -40,4 +40,8 @@ class Venda {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "fk_cliente", referencedColumnName = "id")
     var cliente: Cliente? = null
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "fk_filial", referencedColumnName = "id", nullable = false)
+    var filial: Filial? = null
 }

@@ -1,7 +1,7 @@
 package com.tcc.backend.mappers
 
-import com.tcc.backend.dto.FilialResponseDTO
-import com.tcc.backend.dto.FilialSimplesResponseDTO
+import com.tcc.backend.dto.filialDTO.FilialResponseDTO
+import com.tcc.backend.dto.filialDTO.FilialSimplesResponseDTO
 import com.tcc.backend.models.Filial
 
 // Esta função você já deve ter

@@ -1,8 +1,7 @@
 package com.tcc.backend.controller
 
-import com.tcc.backend.dto.ProdutoDTO
-import com.tcc.backend.dto.ProdutoResponseDTO
-import com.tcc.backend.dto.ProdutoUpdateDTO
+import com.tcc.backend.dto.produtoDTO.ProdutoDTO
+import com.tcc.backend.dto.produtoDTO.ProdutoUpdateDTO
 import com.tcc.backend.mappers.toResponseDTO
 import com.tcc.backend.models.Produto
 import com.tcc.backend.repository.FornecedorRepository

@@ -1,13 +1,15 @@
 package com.tcc.backend.controller
 
-import com.tcc.backend.dto.VendaDTO
-import com.tcc.backend.dto.VendaFiltroDTO
-import com.tcc.backend.dto.VendaUpdateDTO
+import com.tcc.backend.dto.vendaDTO.VendaDTO
+import com.tcc.backend.dto.vendaDTO.VendaFiltroDTO
+import com.tcc.backend.dto.vendaDTO.VendaUpdateDTO
 import com.tcc.backend.mappers.toResponseDTO
 import com.tcc.backend.models.Venda
 import com.tcc.backend.repository.ClienteRepository
+import com.tcc.backend.repository.FilialRepository
 import com.tcc.backend.repository.ProdutoRepository
 import com.tcc.backend.repository.VendaRepository
+import com.tcc.backend.service.EstoqueService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,7 +21,9 @@ import java.time.LocalTime
 class VendaController(
     private val vendaRepository: VendaRepository,
     private val produtoRepository: ProdutoRepository,
-    private val clienteRepository: ClienteRepository
+    private val clienteRepository: ClienteRepository,
+    private val filialRepository: FilialRepository,
+    private val estoqueService: EstoqueService
 ) {
 
     @PostMapping
@@ -42,9 +46,16 @@ class VendaController(
             unidade = vendaDTO.unidade
             this.produto = produto
             this.cliente = cliente
+            this.filial = filial
         }
 
         val salvo = vendaRepository.save(venda)
+        try {
+            estoqueService.darBaixaEstoque(salvo)
+        } catch (e: IllegalStateException) {
+            // Se não houver estoque, retorna erro
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(mapOf("error" to e.message))
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo.toResponseDTO())
     }
 

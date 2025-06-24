@@ -1,6 +1,6 @@
 package com.tcc.backend.controller
 
-import com.tcc.backend.dto.FilialDTO
+import com.tcc.backend.dto.filialDTO.FilialDTO
 import com.tcc.backend.mappers.toEntity
 import com.tcc.backend.mappers.toResponseDTO
 import com.tcc.backend.models.Filial

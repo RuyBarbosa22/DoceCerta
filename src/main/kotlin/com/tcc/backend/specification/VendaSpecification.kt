@@ -1,6 +1,6 @@
 package com.tcc.backend.specification
 
-import com.tcc.backend.dto.VendaFiltroDTO
+import com.tcc.backend.dto.vendaDTO.VendaFiltroDTO
 import com.tcc.backend.models.*
 import jakarta.persistence.criteria.Predicate
 import org.springframework.data.jpa.domain.Specification

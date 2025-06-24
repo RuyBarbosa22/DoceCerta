@@ -1,7 +1,7 @@
 package com.tcc.backend.mappers
 
-import com.tcc.backend.dto.ClienteResponseDTO
-import com.tcc.backend.dto.ClienteSimplesResponseDTO
+import com.tcc.backend.dto.clienteDTO.ClienteResponseDTO
+import com.tcc.backend.dto.clienteDTO.ClienteSimplesResponseDTO
 import com.tcc.backend.models.Cliente
 
 fun Cliente.toResponseDTO(): ClienteResponseDTO {
