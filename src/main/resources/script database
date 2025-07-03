@@ -1,0 +1,177 @@
+-- 1) DROP E CRIAÇÃO DO BANCO
+DROP DATABASE IF EXISTS `DoseCerta`;
+CREATE DATABASE `DoseCerta` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `DoseCerta`;
+
+-- 2) TABELA endereco
+CREATE TABLE `endereco` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `rua` VARCHAR(255) NULL,
+  `numero` VARCHAR(255) NULL,
+  `bairro` VARCHAR(255) NULL,
+  `cidade` VARCHAR(255) NULL,
+  `estado` VARCHAR(255) NULL,
+  `cep` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+-- 3) TABELA empresa
+CREATE TABLE `empresa` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NULL,
+  `cnpj` VARCHAR(255) NULL,
+  `fk_endereco` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_empresa_endereco` (`fk_endereco`),
+  FOREIGN KEY (`fk_endereco`) REFERENCES `endereco`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- 4) TABELA filial
+CREATE TABLE `filial` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NULL,
+  `numero` VARCHAR(255) NULL,
+  `matriz` BOOLEAN NOT NULL DEFAULT FALSE,
+  `fk_empresa` INT NULL,
+  `fk_endereco` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_filial_empresa` (`fk_empresa`),
+  INDEX `idx_filial_endereco` (`fk_endereco`),
+  FOREIGN KEY (`fk_empresa`) REFERENCES `empresa`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL,
+  FOREIGN KEY (`fk_endereco`) REFERENCES `endereco`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- 5) TABELA cliente
+CREATE TABLE `cliente` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NULL,
+  `numeroCtt` VARCHAR(255) NULL,
+  `data_nascimento` DATE NULL,
+  `sexo` VARCHAR(255) NULL,
+  `endereco_id` INT NULL,
+  `data_cadastro` DATE NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_cliente_endereco` (`endereco_id`),
+  FOREIGN KEY (`endereco_id`) REFERENCES `endereco`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- 6) TABELA fornecedor
+CREATE TABLE `fornecedor` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `cnpj` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NULL,
+  `fk_endereco` INT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_fornecedor_cnpj` (`cnpj`),
+  INDEX `idx_fornecedor_endereco` (`fk_endereco`),
+  FOREIGN KEY (`fk_endereco`) REFERENCES `endereco`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- 7) TABELA produto
+CREATE TABLE `produto` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NULL,
+  `custo` DOUBLE NULL,
+  `validade` DATE NULL,
+  `categoria` VARCHAR(255) NULL,
+  `quantidade` INT NULL,
+  `fk_fornecedor` INT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_produto_nome` (`nome`),
+  INDEX `idx_produto_fornecedor` (`fk_fornecedor`),
+  FOREIGN KEY (`fk_fornecedor`) REFERENCES `fornecedor`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- 8) TABELA estoque_filial (PK composta)
+CREATE TABLE `estoque_filial` (
+  `produto_id` INT NOT NULL,
+  `filial_id` INT NOT NULL,
+  `quantidade_atual` INT NOT NULL,
+  `estoque_minimo` INT NOT NULL,
+  PRIMARY KEY (`produto_id`, `filial_id`),
+  INDEX `idx_ef_produto` (`produto_id`),
+  INDEX `idx_ef_filial` (`filial_id`),
+  FOREIGN KEY (`produto_id`) REFERENCES `produto`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY (`filial_id`) REFERENCES `filial`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- 9) ENUM StatusPedido
+CREATE TYPE `StatusPedido` AS ENUM (
+  'PENDENTE',
+  'APROVADO',
+  'ENVIADO',
+  'CONCLUIDO',
+  'CANCELADO'
+);
+
+-- 10) TABELA pedidos_reestoque
+CREATE TABLE `pedidos_reestoque` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `data_pedido` DATETIME NOT NULL,
+  `status` StatusPedido NOT NULL DEFAULT 'PENDENTE',
+  `filial_solicitante_id` INT NOT NULL,
+  `observacoes` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_pr_filial` (`filial_solicitante_id`),
+  FOREIGN KEY (`filial_solicitante_id`) REFERENCES `filial`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- 11) TABELA itens_pedido_reestoque
+CREATE TABLE `itens_pedido_reestoque` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `produto_id` INT NOT NULL,
+  `quantidade_solicitada` INT NOT NULL,
+  `pedido_reestoque_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_ipr_produto` (`produto_id`),
+  INDEX `idx_ipr_pedido` (`pedido_reestoque_id`),
+  FOREIGN KEY (`produto_id`) REFERENCES `produto`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+  FOREIGN KEY (`pedido_reestoque_id`) REFERENCES `pedidos_reestoque`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- 12) TABELA venda
+CREATE TABLE `venda` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `data_venda` DATETIME NULL,
+  `preco_unitario` DOUBLE NULL,
+  `unidade` VARCHAR(255) NULL,
+  `fk_produto` INT NOT NULL,
+  `fk_cliente` INT NULL,
+  `fk_filial` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_venda_produto` (`fk_produto`),
+  INDEX `idx_venda_cliente` (`fk_cliente`),
+  INDEX `idx_venda_filial` (`fk_filial`),
+  FOREIGN KEY (`fk_produto`) REFERENCES `produto`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+  FOREIGN KEY (`fk_cliente`) REFERENCES `cliente`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL,
+  FOREIGN KEY (`fk_filial`) REFERENCES `filial`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+) ENGINE=InnoDB;
